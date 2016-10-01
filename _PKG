@@ -1,0 +1,3 @@
+install=cnc.ahk>$CONF_DIR
+remove=cnc.ahk<$CONF_DIR
+data=NONE
