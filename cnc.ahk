@@ -1,12 +1,42 @@
 insertMode := false
 
-; make ctrl backspace available in notepad
+; make ctrl backspace available in notepad and in ahk input boxes
 #IfWinActive ahk_class Notepad
 #IfWinActive ahk_class #32770
 	^Backspace::
 		Send ^+{Left}{Backspace}
 	return
 #IfWinActive
+
+; ---- TRANSPARENCY ----
+!a::
+	WinSet,Transparent,220,A
+return
+
+^!a::
+	WinSet,Transparent,OFF,A
+return
+
++!a::
+	WinGet, windows, List,
+	Loop, 100
+	{
+		ID := windows%A_Index%
+		WinGetTitle title, ahk_id %ID%
+		WinSet, Transparent, 220, %title%
+	}
+return
++^!a::
+	WinGet, windows, List,
+	Loop, 100
+	{
+		ID := windows%A_Index%
+		WinGetTitle title, ahk_id %ID%
+		WinSet, Transparent, OFF, %title%
+	}
+return
+
+; ---- OTHER CNC ----
 
 $j:: ; down
 	if (CheckCommandMode())
