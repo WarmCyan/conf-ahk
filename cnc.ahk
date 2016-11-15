@@ -181,8 +181,8 @@ VimEditSelected()
 CommandWindow()
 {
 	global insertMode
-	x := A_ScreenWidth - 400 * (A_ScreenDPI / 96)
-	y := A_ScreenHeight - 100 * (A_ScreenDPI / 96)
+	x := A_ScreenWidth - Screenify(400)
+	y := A_ScreenHeight - Screenify(100)
 	
 	insertMode := true
 	SetCapsLockState off
@@ -197,8 +197,8 @@ CommandWindow()
 SearchWindow()
 {
 	global insertMode
-	x := A_ScreenWidth - 400 * (A_ScreenDPI / 96)
-	y := A_ScreenHeight - 100 * (A_ScreenDPI / 96)
+	x := A_ScreenWidth - Screenify(400)
+	y := A_ScreenHeight - Screenify(100)
 	
 	insertMode := true
 	SetCapsLockState off
@@ -218,7 +218,7 @@ SearchWindow()
 WindowLeft()
 {
 	WinGetPos, CurX, CurY, , , A  ; "A" to get the active window's pos.
-	NewX := CurX - 100
+	NewX := CurX - Screenify(100)
 	NewY := CurY 
 	WinMove, A,, %NewX%, %NewY%
 }
@@ -227,7 +227,7 @@ WindowDown()
 {
 	WinGetPos, CurX, CurY, , , A  ; "A" to get the active window's pos.
 	NewX := CurX
-	NewY := CurY + 100
+	NewY := CurY + Screenify(100)
 	WinMove, A,, %NewX%, %NewY%
 }
 
@@ -235,14 +235,14 @@ WindowUp()
 {
 	WinGetPos, CurX, CurY, , , A  ; "A" to get the active window's pos.
 	NewX := CurX
-	NewY := CurY - 100
+	NewY := CurY - Screenify(100)
 	WinMove, A,, %NewX%, %NewY%
 }
 
 WindowRight()
 {
 	WinGetPos, CurX, CurY, , , A  ; "A" to get the active window's pos.
-	NewX := CurX + 100
+	NewX := CurX + Screenify(100)
 	NewY := CurY 
 	WinMove, A,, %NewX%, %NewY%
 }
@@ -260,4 +260,9 @@ CheckCommandMode()
 	{ 
 		return false 
 	}
+}
+
+Screenify(pixels)
+{
+	return pixels * (A_ScreenDPI / 96)
 }
