@@ -120,7 +120,7 @@ VimInsert()
 		StringTrimRight, contents, contents, 2 ; remove last crlf from clipboard
 		
 	Clipboard := contents 
-	Clipwait
+	Clipwait, 1
 	
 	WinActivate ahk_id %winId% 
 	Send +{ins}
@@ -129,7 +129,7 @@ VimInsert()
 	Sleep, 100
 
 	Clipboard := clipsaved
-	Clipwait
+	Clipwait, 1
 	
 	;insertMode := false
 }
@@ -149,7 +149,7 @@ VimEditAll()
 	Send ^{home}
 	Send ^+{end}
 	Send ^{ins}	
-	Clipwait
+	Clipwait, 1
 	
 	fileName := "c:\dwl\tmp\ea" . A_YYYY . A_MM . A_DD . A_Hour . A_Min . A_Sec . A_MSec
 	FileDelete, %fileName% 
@@ -164,7 +164,7 @@ VimEditAll()
 	StringTrimRight, contents, contents, 2 ; remove last crlf from clipboard
 	
 	Clipboard := contents
-	Clipwait
+	Clipwait, 1
 	
 	WinActivate ahk_id %winId% 
 	Send +{ins}
@@ -174,7 +174,7 @@ VimEditAll()
 	Sleep, 100
 
 	Clipboard := clipsaved
-	Clipwait
+	Clipwait, 1
 	
 	;insertMode := false
 }
@@ -192,7 +192,7 @@ VimEditSelected()
 
 	Clipboard = 
 	Send ^{ins}
-	Clipwait
+	Clipwait, 1
 
 	fileName := "c:\dwl\tmp\es" . A_YYYY . A_MM . A_DD . A_Hour . A_Min . A_Sec . A_MSec
 	FileDelete, %fileName%
@@ -204,7 +204,7 @@ VimEditSelected()
 		StringTrimRight, contents, contents, 2 ; remove last crlf from clipboard
 		
 	Clipboard := contents 
-	Clipwait
+	Clipwait, 1
 	
 	WinActivate ahk_id %winId% 
 	Send +{ins}
@@ -213,7 +213,7 @@ VimEditSelected()
 	Sleep, 100
 
 	Clipboard := clipsaved
-	Clipwait
+	Clipwait, 1
 	
 	;insertMode := false
 }
