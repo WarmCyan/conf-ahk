@@ -15,8 +15,12 @@ insertMode := false
 #If
 
 ; make ctrl backspace available in notepad and in ahk input boxes
-#IfWinActive ahk_class Notepad
 #IfWinActive ahk_class #32770
+	^Backspace::
+		Send ^+{Left}{Backspace}
+	return
+#IfWinActive
+#IfWinActive ahk_class Notepad
 	^Backspace::
 		Send ^+{Left}{Backspace}
 	return
