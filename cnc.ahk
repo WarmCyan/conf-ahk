@@ -106,18 +106,30 @@ VimInsert()
 	setcapslockstate off
 	
 	winId := WinExist("A")
+
+	Clipsaved := clipboardall
+
+	
 	fileName := "c:\dwl\tmp\i" . A_YYYY . A_MM . A_DD . A_Hour . A_Min . A_Sec . A_MSec
 	FileDelete, %fileName% 
 	runwait, gvim.exe -c "startinsert" %fileName%, c:\
+	
 	FileRead, contents, %fileName% 
 	StringRight, ending, contents, 2
 	if ending = `r`n
 		StringTrimRight, contents, contents, 2 ; remove last crlf from clipboard
+		
 	Clipboard := contents 
+	Clipwait
+	
 	WinActivate ahk_id %winId% 
 	Send +{ins}
-	contents = 
+	
 	FileDelete, %fileName%
+	Sleep, 100
+
+	Clipboard := clipsaved
+	Clipwait
 	
 	;insertMode := false
 }
@@ -130,24 +142,39 @@ VimEditAll()
 	setcapslockstate off
 	
 	winId := WinExist("A")
+
+	Clipsaved := clipboardall
+
+	Clipboard = 
 	Send ^{home}
 	Send ^+{end}
-	Send ^{ins}
+	Send ^{ins}	
+	Clipwait
+	
 	fileName := "c:\dwl\tmp\ea" . A_YYYY . A_MM . A_DD . A_Hour . A_Min . A_Sec . A_MSec
 	FileDelete, %fileName% 
+	;FileAppend, %Clipboard%, %fileName%
 	FileAppend, %Clipboard%, %fileName%
+
 	runwait, gvim.exe -c "call foreground()" %fileName%, c:\
-	;runwait, gvim.exe %fileName%, c:\
+	
 	FileRead, contents, %fileName%
 	StringRight, ending, contents, 2
 		if ending = `r`n
 	StringTrimRight, contents, contents, 2 ; remove last crlf from clipboard
+	
 	Clipboard := contents
+	Clipwait
+	
 	WinActivate ahk_id %winId% 
 	Send +{ins}
-	Send ^{home}
-	contents = 
+	Send ^{home}	
+	
 	FileDelete, %fileName%
+	Sleep, 100
+
+	Clipboard := clipsaved
+	Clipwait
 	
 	;insertMode := false
 }
@@ -156,11 +183,17 @@ VimEditSelected()
 {
 	global insertMode
 	
-	insertMode := true
+	;insertMode := true
 	SetCapsLockState off
 	
 	winId := WinExist("A")
+	
+	Clipsaved := clipboardall
+
+	Clipboard = 
 	Send ^{ins}
+	Clipwait
+
 	fileName := "c:\dwl\tmp\es" . A_YYYY . A_MM . A_DD . A_Hour . A_Min . A_Sec . A_MSec
 	FileDelete, %fileName%
 	FileAppend, %Clipboard%, %fileName%
@@ -169,13 +202,20 @@ VimEditSelected()
 	StringRight, ending, contents, 2
 	if ending = `r`n
 		StringTrimRight, contents, contents, 2 ; remove last crlf from clipboard
+		
 	Clipboard := contents 
+	Clipwait
+	
 	WinActivate ahk_id %winId% 
 	Send +{ins}
-	contents = 
-	FileDelete, %fileName%
 	
-	insertMode := false
+	FileDelete, %fileName%
+	Sleep, 100
+
+	Clipboard := clipsaved
+	Clipwait
+	
+	;insertMode := false
 }
 
 CommandWindow()
