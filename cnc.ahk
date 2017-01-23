@@ -1,10 +1,14 @@
 insertMode := false
 
 #If CheckCommandMode()
-	$h:: WindowLeft()
-	$j:: WindowDown()
-	$k:: WindowUp()
-	$l:: WindowRight()
+	$h:: MoveWindowLeft()
+	$j:: MoveWindowDown()
+	$k:: MoveWindowUp()
+	$l:: MoveWindowRight()
+
+	$^h:: SetWindowLeft()
+	
+	$W:: WindowModifier()
 
 	$/:: SearchWindow()
 	$`;:: CommandWindow()
@@ -259,7 +263,12 @@ SearchWindow()
 	Run, chrome.exe `"http://google.com/search?q=%UserInput%`" --disable-plugins --disable-extensions --enable-fast-unload --new-window --start-maximized
 }
 
-WindowLeft()
+SetWindowLeft()
+{
+	WinMove, A,, 0,0
+}
+
+MoveWindowLeft()
 {
 	WinGetPos, CurX, CurY, , , A  ; "A" to get the active window's pos.
 	NewX := CurX - Screenify(100)
@@ -267,7 +276,7 @@ WindowLeft()
 	WinMove, A,, %NewX%, %NewY%
 }
 
-WindowDown()
+MoveWindowDown()
 {
 	WinGetPos, CurX, CurY, , , A  ; "A" to get the active window's pos.
 	NewX := CurX
@@ -275,7 +284,7 @@ WindowDown()
 	WinMove, A,, %NewX%, %NewY%
 }
 
-WindowUp()
+MoveWindowUp()
 {
 	WinGetPos, CurX, CurY, , , A  ; "A" to get the active window's pos.
 	NewX := CurX
@@ -283,12 +292,25 @@ WindowUp()
 	WinMove, A,, %NewX%, %NewY%
 }
 
-WindowRight()
+MoveWindowRight()
 {
 	WinGetPos, CurX, CurY, , , A  ; "A" to get the active window's pos.
 	NewX := CurX + Screenify(100)
 	NewY := CurY 
 	WinMove, A,, %NewX%, %NewY%
+}
+
+WindowModifier()
+{
+	global insertMode
+	
+	;while CheckCommandMode()
+	;KeyWait
+	insertMode := true
+	
+	Input, keyInput, T2,, hk
+
+	insertMode := false
 }
 
 CheckCommandMode() 
