@@ -6,7 +6,7 @@ insertMode := false
 	$k:: MoveWindowUp()
 	$l:: MoveWindowRight()
 
-	$^h:: SetWindowLeft()
+	$+h:: SetWindowLeft()
 	
 	$W:: WindowModifier()
 
@@ -265,7 +265,9 @@ SearchWindow()
 
 SetWindowLeft()
 {
-	WinMove, A,, 0,0
+	x := Screenify(-6)
+	y := Screenify(0)
+	WinMove, A,, x, y
 }
 
 MoveWindowLeft()
@@ -305,10 +307,35 @@ WindowModifier()
 	global insertMode
 	
 	;while CheckCommandMode()
-	;KeyWait
 	insertMode := true
-	
-	Input, keyInput, T2,, hk
+
+	while (true)
+	{
+		;PostMessage, 0x50, 0, 0x0409 ,, A
+		Input, keyInput, L1 T2, {Enter}{CapsLock}
+		if (ErrorLevel = "EndKey:Enter" or ErrorLevel = "EndKey:CapsLock")
+		{
+			MsgBox, "Should break out now"
+			Break
+		}
+
+		;MsgBox, you entered "%keyInput%"
+
+		GetKeyState, state, h, T
+		if (state)
+		{
+			SetWindowLeft()
+		}
+		
+		
+		;if (keyInput = "h")
+		;{
+		;	SetWindowLeft()
+		;}
+	}
+
+	MsgBox, "finished"
+	SetCapsLockState off
 
 	insertMode := false
 }
