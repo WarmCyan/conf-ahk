@@ -270,6 +270,48 @@ SetWindowLeft()
 	WinMove, A,, x, y
 }
 
+SetWindowStarter()
+{
+	Width := CalculateWindowWidthFraction(2)
+	Height := CalculateWindowHeightFraction(1)
+	;MsgBox, Width: %Width% Height: %Height%
+	x := CalculateWindowXPosFraction(0, Width)
+	y := CalculateWindowYPosFraction(0, Height)
+	;MsgBox, x: %x% y: %y%
+	WinMove, A,, x, y, Width, Height
+}
+
+SetWindowFractionLeft()
+{
+	; get num pos before changing width so can adjust to same num afterwards? (avoid bugs)
+	WinGetPos, ,, CurWidth, , A
+	widthDenom := GetWindowWidthFraction(CurWidth)
+	;MsgBox, current widthdenom: "%widthDenom%"
+	widthDenom := widthDenom + 1
+	;MsgBox, now: "%widthDenom%"
+	Width := CalculateWindowWidthFraction(widthDenom)
+	WinMove, A,,,, Width
+}
+
+ShiftWindowRight()
+{
+	WinGetPos, CurX, , CurWidth, , A
+	num := GetWindowXPosFraction(CurX, CurWidth)
+	num := num + 1
+
+	x := CalculateWindowXPosFraction(num, CurWidth)
+	WinMove, A, , x, ,
+}
+ShiftWindowLeft()
+{
+	WinGetPos, CurX, , CurWidth, , A
+	num := GetWindowXPosFraction(CurX, CurWidth)
+	num := num - 1
+
+	x := CalculateWindowXPosFraction(num, CurWidth)
+	WinMove, A, , x, ,
+}
+
 MoveWindowLeft()
 {
 	WinGetPos, CurX, CurY, , , A  ; "A" to get the active window's pos.
@@ -302,39 +344,55 @@ MoveWindowRight()
 	WinMove, A,, %NewX%, %NewY%
 }
 
+; TODO: with shift down, that changes location, without shift down, change sizing
 WindowModifier()
 {
 	global insertMode
 	
-	;while CheckCommandMode()
 	insertMode := true
 
 	while (true)
 	{
-		;PostMessage, 0x50, 0, 0x0409 ,, A
 		Input, keyInput, L1 T2, {Enter}{CapsLock}
 		if (ErrorLevel = "EndKey:Enter" or ErrorLevel = "EndKey:CapsLock")
 		{
-			MsgBox, "Should break out now"
+			;MsgBox, "Should break out now"
 			Break
 		}
 
-		;MsgBox, you entered "%keyInput%"
 
-		GetKeyState, state, h, T
-		if (state)
+		GetKeyState, shiftState, Shift, P
+		GetKeyState, stateh, h, P
+		GetKeyState, statej, j, P
+		GetKeyState, statek, k, P
+		GetKeyState, statel, l, P
+		GetKeyState, stateSpace, Space, P
+		;stateh := GetKeyState(h)
+		;statej := GetKeyState("j")
+		;statek := GetKeyState("k")
+		;statel := GetKeyState("l")
+		;stateSpace := GetKeyState("Space")
+		;shiftState := GetKeyState("Shift", "T")
+		if (stateSpace = "D")
 		{
-			SetWindowLeft()
+			SetWindowStarter()
 		}
-		
-		
-		;if (keyInput = "h")
-		;{
-		;	SetWindowLeft()
-		;}
+		if (shiftState = "D" and statel = "D")
+		{
+			;SetWindowLeft()
+			ShiftWindowRight()
+		}
+		if (shiftState = "D" and stateh = "D")
+		{
+			ShiftWindowLeft()
+		}
+		if (shiftState = "U" and stateh = "D")
+		{
+			SetWindowFractionLeft()
+		}
 	}
 
-	MsgBox, "finished"
+	;MsgBox, "finished"
 	SetCapsLockState off
 
 	insertMode := false
@@ -353,6 +411,51 @@ CheckCommandMode()
 	{ 
 		return false 
 	}
+}
+
+CalculateWindowWidthFraction(denom)
+{
+	pixels := A_ScreenWidth / denom
+	return pixels
+}
+CalculateWindowHeightFraction(denom)
+{
+	pixels := A_ScreenHeight / denom
+	return pixels + Screenify(5)
+}
+
+GetWindowWidthFraction(width)
+{
+	;denom := A_ScreenWidth / Screenify(width)
+	denom := A_ScreenWidth / width
+	return denom
+}
+
+GetWindowHeightFraction(height)
+{
+	;denom := A_ScreenHeight / Screenify(height)
+	denom := A_ScreenHeight / height
+	return denom
+}
+
+CalculateWindowXPosFraction(num, width)
+{
+	return num * width - Screenify(6)
+}
+CalculateWindowYPosFraction(num, height)
+{
+	return num * height
+}
+
+; gives you the "numerator"?
+GetWindowXPosFraction(x, width)
+{
+;	denom := GetWindowWidthFraction(width)
+	return x / width
+}
+GetWindowYPosFraction(y, height)
+{
+	return y / height
 }
 
 Screenify(pixels)
