@@ -272,9 +272,11 @@ SetWindowLeft()
 
 SetWindowStarter()
 {
+	;Width := CalculateWindowWidthFraction(2) + Screenify(12)
 	Width := CalculateWindowWidthFraction(2)
 	Height := CalculateWindowHeightFraction(1)
-	;MsgBox, Width: %Width% Height: %Height%
+	MsgBox, Width: %Width% Height: %Height%
+	;x := CalculateWindowXPosFraction(0, Width) - Screenify(6)
 	x := CalculateWindowXPosFraction(0, Width)
 	y := CalculateWindowYPosFraction(0, Height)
 	;MsgBox, x: %x% y: %y%
@@ -286,29 +288,48 @@ SetWindowFractionLeft()
 	; get num pos before changing width so can adjust to same num afterwards? (avoid bugs)
 	WinGetPos, ,, CurWidth, , A
 	widthDenom := GetWindowWidthFraction(CurWidth)
-	;MsgBox, current widthdenom: "%widthDenom%"
+	MsgBox, current widthdenom: "%widthDenom%"
 	widthDenom := widthDenom + 1
-	;MsgBox, now: "%widthDenom%"
+	MsgBox, now: "%widthDenom%"
 	Width := CalculateWindowWidthFraction(widthDenom)
+	MsgBox, %Width%
 	WinMove, A,,,, Width
 }
+SetWindowFractionRight()
+{
+	; get num pos before changing width so can adjust to same num afterwards? (avoid bugs)
+	WinGetPos, ,, CurWidth, , A
+	widthDenom := GetWindowWidthFraction(CurWidth)
+	MsgBox, current widthdenom: "%widthDenom%"
+	widthDenom := widthDenom - 1
+	MsgBox, now: "%widthDenom%"
+	Width := CalculateWindowWidthFraction(widthDenom)
+	MsgBox, %Width%
+	WinMove, A,,,, Width
+}
+
 
 ShiftWindowRight()
 {
 	WinGetPos, CurX, , CurWidth, , A
+	;CurWidth := CurWidth + Screenify(6)
 	num := GetWindowXPosFraction(CurX, CurWidth)
+	MsgBox, current widthdenom: "%num%"
 	num := num + 1
 
 	x := CalculateWindowXPosFraction(num, CurWidth)
+	MsgBox, %x%
 	WinMove, A, , x, ,
 }
 ShiftWindowLeft()
 {
 	WinGetPos, CurX, , CurWidth, , A
+	;CurWidth := CurWidth + Screenify(6)
 	num := GetWindowXPosFraction(CurX, CurWidth)
 	num := num - 1
 
 	x := CalculateWindowXPosFraction(num, CurWidth)
+	MsgBox, %x%
 	WinMove, A, , x, ,
 }
 
@@ -377,18 +398,22 @@ WindowModifier()
 		{
 			SetWindowStarter()
 		}
-		if (shiftState = "D" and statel = "D")
+		if (shiftState = "U" and statel = "D")
 		{
 			;SetWindowLeft()
 			ShiftWindowRight()
 		}
-		if (shiftState = "D" and stateh = "D")
+		if (shiftState = "U" and stateh = "D")
 		{
 			ShiftWindowLeft()
 		}
-		if (shiftState = "U" and stateh = "D")
+		if (shiftState = "D" and stateh = "D")
 		{
 			SetWindowFractionLeft()
+		}
+		if (shiftState = "D" and statel = "D")
+		{
+			SetWindowFractionRight()
 		}
 	}
 
@@ -416,49 +441,53 @@ CheckCommandMode()
 CalculateWindowWidthFraction(denom)
 {
 	pixels := A_ScreenWidth / denom
-	return pixels
+	;return round(pixels + Screenify(12))
+	return round(pixels + Screenify(12))
 }
 CalculateWindowHeightFraction(denom)
 {
 	pixels := A_ScreenHeight / denom
-	return pixels + Screenify(5)
+	return round(pixels + Screenify(5))
 }
 
 GetWindowWidthFraction(width)
 {
 	;denom := A_ScreenWidth / Screenify(width)
 	denom := A_ScreenWidth / width
-	return denom
+	return round(denom)
 }
 
 GetWindowHeightFraction(height)
 {
-	;denom := A_ScreenHeight / Screenify(height)
+	;denom := A_Screeneight / Screenify(height)
 	denom := A_ScreenHeight / height
-	return denom
+	return round(denom)
 }
 
 CalculateWindowXPosFraction(num, width)
 {
-	return num * width - Screenify(6)
+	return round(num * width) - Screenify(6)
+	;return round(num * width) - Screenify(18)
+	;return round(num * width)
 }
 CalculateWindowYPosFraction(num, height)
 {
-	return num * height
+	return round(num * height)
 }
 
 ; gives you the "numerator"?
 GetWindowXPosFraction(x, width)
 {
 ;	denom := GetWindowWidthFraction(width)
-	return x / width
+	return round(x / width)
 }
 GetWindowYPosFraction(y, height)
 {
-	return y / height
+	return round(y / height)
 }
 
 Screenify(pixels)
 {
 	return pixels * (A_ScreenDPI / 96)
 }
+
