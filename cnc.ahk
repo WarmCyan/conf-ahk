@@ -280,6 +280,15 @@ SetWindowStarter()
 	x := CalculateWindowXPosFraction(0, Width)
 	y := CalculateWindowYPosFraction(0, Height)
 	;MsgBox, x: %x% y: %y%
+
+	; FIX 
+	x := x - Screenify(6)
+	Width := Width + Screenify(12)
+	height := Height + Screenify(5)
+	; /FIX
+
+
+	
 	WinMove, A,, x, y, Width, Height
 }
 
@@ -287,24 +296,46 @@ SetWindowFractionLeft()
 {
 	; get num pos before changing width so can adjust to same num afterwards? (avoid bugs)
 	WinGetPos, ,, CurWidth, , A
+
+	; FIX
+	CurWidth := CurWidth - Screenify(12)
+	; /FIX
+
+	
 	widthDenom := GetWindowWidthFraction(CurWidth)
 	MsgBox, current widthdenom: "%widthDenom%"
 	widthDenom := widthDenom + 1
 	MsgBox, now: "%widthDenom%"
 	Width := CalculateWindowWidthFraction(widthDenom)
 	MsgBox, %Width%
+
+	; FIX
+	Width := Width + Screenify(12)
+	; /FIX
+	
 	WinMove, A,,,, Width
 }
 SetWindowFractionRight()
 {
 	; get num pos before changing width so can adjust to same num afterwards? (avoid bugs)
 	WinGetPos, ,, CurWidth, , A
+
+	; FIX
+	CurWidth := CurWidth - Screenify(12)
+	; /FIX
+
+	
 	widthDenom := GetWindowWidthFraction(CurWidth)
 	MsgBox, current widthdenom: "%widthDenom%"
 	widthDenom := widthDenom - 1
 	MsgBox, now: "%widthDenom%"
 	Width := CalculateWindowWidthFraction(widthDenom)
 	MsgBox, %Width%
+
+	; FIX
+	Width := Width + Screenify(12)
+	; /FIX
+	
 	WinMove, A,,,, Width
 }
 
@@ -312,6 +343,12 @@ SetWindowFractionRight()
 ShiftWindowRight()
 {
 	WinGetPos, CurX, , CurWidth, , A
+
+	; FIX
+	CurX := CurX + Screenify(6)
+	CurWidth := CurWidth - Screenify(12)
+	; /FIX
+
 	;CurWidth := CurWidth + Screenify(6)
 	num := GetWindowXPosFraction(CurX, CurWidth)
 	MsgBox, current widthdenom: "%num%"
@@ -319,17 +356,33 @@ ShiftWindowRight()
 
 	x := CalculateWindowXPosFraction(num, CurWidth)
 	MsgBox, %x%
+
+	; FIX
+	x := x - Screenify(6)
+	; /FIX
+	
 	WinMove, A, , x, ,
 }
 ShiftWindowLeft()
 {
 	WinGetPos, CurX, , CurWidth, , A
+
+	; FIX
+	CurX := CurX + Screenify(6)
+	CurWidth := CurWidth - Screenify(12)
+	; /FIX
+
 	;CurWidth := CurWidth + Screenify(6)
 	num := GetWindowXPosFraction(CurX, CurWidth)
 	num := num - 1
 
 	x := CalculateWindowXPosFraction(num, CurWidth)
 	MsgBox, %x%
+
+	; FIX
+	x := x - Screenify(6)
+	; /FIX
+	
 	WinMove, A, , x, ,
 }
 
@@ -442,12 +495,14 @@ CalculateWindowWidthFraction(denom)
 {
 	pixels := A_ScreenWidth / denom
 	;return round(pixels + Screenify(12))
-	return round(pixels + Screenify(12))
+	;return round(pixels + Screenify(12))
+	return round(pixels)
 }
 CalculateWindowHeightFraction(denom)
 {
 	pixels := A_ScreenHeight / denom
-	return round(pixels + Screenify(5))
+	;return round(pixels + Screenify(5))
+	return round(pixels)
 }
 
 GetWindowWidthFraction(width)
@@ -466,9 +521,9 @@ GetWindowHeightFraction(height)
 
 CalculateWindowXPosFraction(num, width)
 {
-	return round(num * width) - Screenify(6)
+	;return round(num * width) - Screenify(6)
 	;return round(num * width) - Screenify(18)
-	;return round(num * width)
+	return round(num * width)
 }
 CalculateWindowYPosFraction(num, height)
 {
