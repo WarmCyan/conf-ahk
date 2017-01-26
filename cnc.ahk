@@ -1,5 +1,9 @@
 insertMode := false
 
+windowAdjustedX := 6
+windowAdjustedWidth := 12
+windowAdjustedHeight := 5
+
 #If CheckCommandMode()
 	$h:: MoveWindowLeft()
 	$j:: MoveWindowDown()
@@ -272,68 +276,76 @@ SetWindowLeft()
 
 SetWindowStarter()
 {
-	;Width := CalculateWindowWidthFraction(2) + Screenify(12)
+	global windowAdjustedX
+	global windowAdjustedWidth
+	global windowAdjustedHeight
+
 	Width := CalculateWindowWidthFraction(2)
 	Height := CalculateWindowHeightFraction(1)
-	MsgBox, Width: %Width% Height: %Height%
-	;x := CalculateWindowXPosFraction(0, Width) - Screenify(6)
+	;MsgBox, Width: %Width% Height: %Height%
 	x := CalculateWindowXPosFraction(0, Width)
 	y := CalculateWindowYPosFraction(0, Height)
 	;MsgBox, x: %x% y: %y%
 
 	; FIX 
-	x := x - Screenify(6)
-	Width := Width + Screenify(12)
-	height := Height + Screenify(5)
+	x := x - Screenify(windowAdjustedX)
+	Width := Width + Screenify(windowAdjustedWidth)
+	height := Height + Screenify(windowAdjustedHeight)
 	; /FIX
-
-
 	
 	WinMove, A,, x, y, Width, Height
 }
 
 SetWindowFractionLeft()
 {
+	global windowAdjustedX
+	global windowAdjustedWidth
+	global windowAdjustedHeight
+	
 	; get num pos before changing width so can adjust to same num afterwards? (avoid bugs)
 	WinGetPos, ,, CurWidth, , A
 
 	; FIX
-	CurWidth := CurWidth - Screenify(12)
+	CurWidth := CurWidth - Screenify(windowAdjustedWidth)
 	; /FIX
 
 	
 	widthDenom := GetWindowWidthFraction(CurWidth)
-	MsgBox, current widthdenom: "%widthDenom%"
+	;MsgBox, current widthdenom: "%widthDenom%"
 	widthDenom := widthDenom + 1
-	MsgBox, now: "%widthDenom%"
+	;MsgBox, now: "%widthDenom%"
 	Width := CalculateWindowWidthFraction(widthDenom)
-	MsgBox, %Width%
+	;MsgBox, %Width%
 
 	; FIX
-	Width := Width + Screenify(12)
+	Width := Width + Screenify(windowAdjustedWidth)
 	; /FIX
 	
 	WinMove, A,,,, Width
 }
 SetWindowFractionRight()
 {
+	global windowAdjustedX
+	global windowAdjustedWidth
+	global windowAdjustedHeight
+	
 	; get num pos before changing width so can adjust to same num afterwards? (avoid bugs)
 	WinGetPos, ,, CurWidth, , A
 
 	; FIX
-	CurWidth := CurWidth - Screenify(12)
+	CurWidth := CurWidth - Screenify(windowAdjustedWidth)
 	; /FIX
 
 	
 	widthDenom := GetWindowWidthFraction(CurWidth)
-	MsgBox, current widthdenom: "%widthDenom%"
+	;MsgBox, current widthdenom: "%widthDenom%"
 	widthDenom := widthDenom - 1
-	MsgBox, now: "%widthDenom%"
+	;MsgBox, now: "%widthDenom%"
 	Width := CalculateWindowWidthFraction(widthDenom)
-	MsgBox, %Width%
+	;MsgBox, %Width%
 
 	; FIX
-	Width := Width + Screenify(12)
+	Width := Width + Screenify(windowAdjustedWidth)
 	; /FIX
 	
 	WinMove, A,,,, Width
@@ -342,34 +354,42 @@ SetWindowFractionRight()
 
 ShiftWindowRight()
 {
+	global windowAdjustedX
+	global windowAdjustedWidth
+	global windowAdjustedHeight
+	
 	WinGetPos, CurX, , CurWidth, , A
 
 	; FIX
-	CurX := CurX + Screenify(6)
-	CurWidth := CurWidth - Screenify(12)
+	CurX := CurX + Screenify(windowAdjustedX)
+	CurWidth := CurWidth - Screenify(windowAdjustedWidth)
 	; /FIX
 
 	;CurWidth := CurWidth + Screenify(6)
 	num := GetWindowXPosFraction(CurX, CurWidth)
-	MsgBox, current widthdenom: "%num%"
+	;MsgBox, current widthdenom: "%num%"
 	num := num + 1
 
 	x := CalculateWindowXPosFraction(num, CurWidth)
-	MsgBox, %x%
+	;MsgBox, %x%
 
 	; FIX
-	x := x - Screenify(6)
+	x := x - Screenify(windowAdjustedX)
 	; /FIX
 	
 	WinMove, A, , x, ,
 }
 ShiftWindowLeft()
 {
+	global windowAdjustedX
+	global windowAdjustedWidth
+	global windowAdjustedHeight
+	
 	WinGetPos, CurX, , CurWidth, , A
 
 	; FIX
-	CurX := CurX + Screenify(6)
-	CurWidth := CurWidth - Screenify(12)
+	CurX := CurX + Screenify(windowAdjustedX)
+	CurWidth := CurWidth - Screenify(windowAdjustedWidth)
 	; /FIX
 
 	;CurWidth := CurWidth + Screenify(6)
@@ -377,10 +397,10 @@ ShiftWindowLeft()
 	num := num - 1
 
 	x := CalculateWindowXPosFraction(num, CurWidth)
-	MsgBox, %x%
+	;MsgBox, %x%
 
 	; FIX
-	x := x - Screenify(6)
+	x := x - Screenify(windowAdjustedX)
 	; /FIX
 	
 	WinMove, A, , x, ,
@@ -427,7 +447,7 @@ WindowModifier()
 
 	while (true)
 	{
-		Input, keyInput, L1 T2, {Enter}{CapsLock}
+		Input, keyInput, L1 T2, {Enter}{CapsLock}{Tab}
 		if (ErrorLevel = "EndKey:Enter" or ErrorLevel = "EndKey:CapsLock")
 		{
 			;MsgBox, "Should break out now"
@@ -441,6 +461,7 @@ WindowModifier()
 		GetKeyState, statek, k, P
 		GetKeyState, statel, l, P
 		GetKeyState, stateSpace, Space, P
+		GetKeyState, stateTab, Tab, P
 		;stateh := GetKeyState(h)
 		;statej := GetKeyState("j")
 		;statek := GetKeyState("k")
@@ -450,6 +471,10 @@ WindowModifier()
 		if (stateSpace = "D")
 		{
 			SetWindowStarter()
+		}
+		if (stateTab = "D")
+		{
+			Send !{Tab}
 		}
 		if (shiftState = "U" and statel = "D")
 		{
