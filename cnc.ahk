@@ -74,6 +74,7 @@ return
 $p:: 
 	if (CheckCommandMode())
 	{
+		setcapslockstate off
 		run powershell
 	}
 	else
