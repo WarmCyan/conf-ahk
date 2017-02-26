@@ -106,7 +106,7 @@ HandleCommand(cmdWord1, cmdRight, fullCommand)
 	}
 	else if (fullCommand  = "py35")
 	{
-		run, conemu.exe "{REPL::Python35}"
+		run, conemu.exe "{REPL::Python3.5}"
 	}
 }
 
