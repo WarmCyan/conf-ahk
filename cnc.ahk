@@ -100,6 +100,14 @@ HandleCommand(cmdWord1, cmdRight, fullCommand)
 	{
 		Run, chrome.exe `"%cmdRight%"
 	}
+	else if (fullCommand = "")
+	{
+		run, conemu.exe
+	}
+	else if (fullCommand  = "py35")
+	{
+		run, conemu.exe "{REPL::Python35}"
+	}
 }
 
 RunFullCommand(fullCommand)
